@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS starbux;
+CREATE DATABASE starbux;
