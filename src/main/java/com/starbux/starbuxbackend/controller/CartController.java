@@ -20,16 +20,16 @@ import java.util.List;
 public class CartController {
     @Autowired
     CartService cartService;
-    
+
     @GetMapping("/{userId}/carts")
     public ResponseEntity<List<CartDto>> getUserCarts(@PathVariable Long userId) {
         return ResponseEntity.ok(cartService.getUserCarts(userId));
     }
-    
+
     @PostMapping("/{userId}/carts")
     public ResponseEntity<CartDto> createUserCart(@PathVariable Long userId) {
         return ResponseEntity.ok(cartService.createCart(userId));
-    } 
+    }
 
     @GetMapping("/{userId}/carts/{cartId}")
     public ResponseEntity<CartDto> getCart(@PathVariable Long userId, @PathVariable Long cartId) {
@@ -44,27 +44,27 @@ public class CartController {
     @DeleteMapping("/{userId}/carts/{cartId}")
     public ResponseEntity deleteItemFromCart(@PathVariable Long userId, @PathVariable Long cartId, @RequestParam(required = true) Long cartItemId) {
         boolean isRemoved = cartService.deleteCartItem(userId, cartId, cartItemId);
-        if(isRemoved){
+        if (isRemoved) {
             return new ResponseEntity("Succesfully removed cart item!", HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    
+
     @PostMapping("/{userId}/carts/{cartId}/{cartItemId}")
     public ResponseEntity<CartItemDto> addProductToCartItem(@PathVariable Long userId, @PathVariable Long cartId,
-        @PathVariable Long cartItemId, @RequestParam(required = true) Long productId) {
+                                                            @PathVariable Long cartItemId, @RequestParam(required = true) Long productId) {
         return ResponseEntity.ok(cartService.addProductToCartItem(userId, cartId, cartItemId, productId));
     }
 
     @DeleteMapping("/{userId}/carts/{cartId}/{cartItemId}")
     public ResponseEntity removeProductFromCartItem(@PathVariable Long userId, @PathVariable Long cartId,
-                                                            @PathVariable Long cartItemId, @RequestParam(required = true) Long productId) {
+                                                    @PathVariable Long cartItemId, @RequestParam(required = true) Long productId) {
         boolean isRemoved = cartService.removeProductFromCartItem(userId, cartId, cartItemId, productId);
-        if(isRemoved){
+        if (isRemoved) {
             return new ResponseEntity("Succesfully removed product from cart item!", HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    
-    
+
+
 }

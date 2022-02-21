@@ -1,7 +1,6 @@
 package com.starbux.starbuxbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -11,7 +10,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name="PRODUCT")
+@Table(name = "PRODUCT")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +21,9 @@ public class Product {
     private BigDecimal price;
 
     private ProductType productType;
-    
+
     private Currency currency;
-    
+
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "products")
     @JsonBackReference
     private List<CartItem> cartItem;

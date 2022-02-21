@@ -9,20 +9,20 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name="\"ORDER\"")
+@Table(name = "\"ORDER\"")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonManagedReference
     private User user;
-    
+
     private Date orderDate;
 
     private BigDecimal originalTotal;
-    
+
     private BigDecimal totalWithDiscount;
 }

@@ -26,12 +26,12 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title ("Starbux REST Service")
-                .description ("This is the backend application for Starbux")
+                .title("Starbux REST Service")
+                .description("This is the backend application for Starbux")
                 .license("MIT")
                 .licenseUrl("https://opensource.org/licenses/MIT")
                 .version("1.0.0")
-                .contact(new Contact("Nathan Ribeiro","https://github.com/nathanlogus", "nathanpirral@gmail.com"))
+                .contact(new Contact("Nathan Ribeiro", "https://github.com/nathanlogus", "nathanpirral@gmail.com"))
                 .build();
     }
 }

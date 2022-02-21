@@ -1,7 +1,6 @@
 package com.starbux.starbuxbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,7 +9,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name="CART")
+@Table(name = "CART")
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +19,7 @@ public class Cart {
     @JoinColumn(name = "user_id")
     @JsonManagedReference
     private User user;
-    
+
     private BigDecimal subtotal;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cart", cascade = CascadeType.REMOVE, orphanRemoval = true)

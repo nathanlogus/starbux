@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductRepository productRepository;
-    
+
     @Override
     public List<ProductDto> getAllProducts() {
         return productRepository.findAll().stream().map(product -> productDtoFromProduct(product)).collect(Collectors.toList());
@@ -29,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProductById(Long productId) {
-        if(productRepository.findById(productId).isPresent())
+        if (productRepository.findById(productId).isPresent())
             return productDtoFromProduct(productRepository.findById(productId).get());
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested product was not found!");
     }
@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto createProduct(ProductDto productDto) {
         log.info("Creating product: {}", productDto);
-        if(Stream.of(ProductType.values()).anyMatch(v -> v.name().equals(productDto.getProductType().name()))){
+        if (Stream.of(ProductType.values()).anyMatch(v -> v.name().equals(productDto.getProductType().name()))) {
             return productDtoFromProduct(productRepository.saveAndFlush(productFromDto(productDto)));
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product type not valid!");
@@ -45,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto updateProduct(Long productId, ProductDto productDto) {
-        if(productRepository.findById(productId).isPresent()) {
+        if (productRepository.findById(productId).isPresent()) {
             log.info("Updating product: {}", productId);
             Product productObject = productRepository.findById(productId).get();
             productObject.setName(productDto.getName());
@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean deleteProduct(Long productId) {
-        if(productRepository.findById(productId).isPresent()) {
+        if (productRepository.findById(productId).isPresent()) {
             log.info("Deleting user with Id: {}", productId);
             productRepository.deleteById(productId);
             return true;

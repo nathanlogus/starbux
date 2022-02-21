@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name="CART_ITEM")
+@Table(name = "CART_ITEM")
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +20,9 @@ public class CartItem {
     @JoinColumn(name = "cart_id")
     @JsonBackReference
     private Cart cart;
-    
+
     private Integer quantity;
-    
+
     private BigDecimal price;
 
     @ManyToMany

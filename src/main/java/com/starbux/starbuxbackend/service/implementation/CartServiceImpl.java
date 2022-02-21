@@ -28,20 +28,20 @@ import java.util.stream.Collectors;
 public class CartServiceImpl implements CartService {
     @Autowired
     UserRepository userRepository;
-    
+
     @Autowired
     CartRepository cartRepository;
-    
+
     @Autowired
     CartItemRepository cartItemRepository;
-    
+
     @Autowired
     ProductRepository productRepository;
-    
-    
+
+
     @Override
     public List<CartDto> getUserCarts(Long userId) {
-        List<Cart> userCarts = userRepository.findById(userId).get().getCarts();     
+        List<Cart> userCarts = userRepository.findById(userId).get().getCarts();
         return userCarts.stream().map(cart -> cartDtoFromCart(cart)).collect(Collectors.toList());
     }
 
@@ -51,18 +51,18 @@ public class CartServiceImpl implements CartService {
                 userRepository.findById(userId)
                         .get().getCarts().stream()
                         .filter(cart -> cart.getId().equals(cartId)).findFirst();
-        if(matchingObject.isPresent()){
+        if (matchingObject.isPresent()) {
             matchingObject.get().setSubtotal(matchingObject.get().getCartItems().stream()
                     .map(x -> x.getPrice().multiply(BigDecimal.valueOf(x.getQuantity())))
                     .reduce(BigDecimal.ZERO, BigDecimal::add));
-            return cartDtoFromCart(matchingObject.get());    
+            return cartDtoFromCart(matchingObject.get());
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested cart was not found or doesn't belong to that user!");
     }
-    
+
     @Override
     public CartDto createCart(Long userId) {
-        if(userRepository.findById(userId).isPresent()){
+        if (userRepository.findById(userId).isPresent()) {
             User user = userRepository.findById(userId).get();
             Cart cart = new Cart();
             cart.setUser(user);
@@ -74,14 +74,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartItemDto createCartItem(Long userId, Long cartId) {
-        if(userRepository.findById(userId).isPresent() && cartRepository.findById(cartId).isPresent()) {
+        if (userRepository.findById(userId).isPresent() && cartRepository.findById(cartId).isPresent()) {
             Optional<Cart> cart = cartRepository.findById(cartId);
-            if(cart.isPresent()){
+            if (cart.isPresent()) {
                 CartItem cartItem = new CartItem();
                 cartItem.setCart(cart.get());
                 cartItem.setPrice(BigDecimal.valueOf(0));
                 cartItem.setQuantity(0);
-                return cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));    
+                return cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
             }
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't create cart item!");
@@ -89,9 +89,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public boolean deleteCartItem(Long userId, Long cartId, Long cartItemId) {
-        if(userRepository.findById(userId).isPresent() &&
+        if (userRepository.findById(userId).isPresent() &&
                 cartRepository.findById(cartId).isPresent() &&
-                cartItemRepository.findById(cartItemId).isPresent()){
+                cartItemRepository.findById(cartItemId).isPresent()) {
             cartItemRepository.deleteById(cartItemId);
             return true;
         }
@@ -100,12 +100,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartItemDto addProductToCartItem(Long userId, Long cartId, Long cartItemId, Long productId) {
-        if( userRepository.findById(userId).isPresent() &&
-            cartRepository.findById(cartId).isPresent() &&
-            cartItemRepository.findById(cartItemId).isPresent()) {
+        if (userRepository.findById(userId).isPresent() &&
+                cartRepository.findById(cartId).isPresent() &&
+                cartItemRepository.findById(cartItemId).isPresent()) {
             Optional<Cart> cart = cartRepository.findById(cartId);
             Optional<Product> product = productRepository.findById(productId);
-            if(product.isPresent()){
+            if (product.isPresent()) {
                 CartItem cartItem = cartItemRepository.findById(cartItemId).get();
                 cartItem.getProducts().add(product.get());
                 cartItem.setCart(cart.get());
@@ -121,19 +121,19 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public boolean removeProductFromCartItem(Long userId, Long cartId, Long cartItemId, Long productId) {
-        if( userRepository.findById(userId).isPresent() &&
+        if (userRepository.findById(userId).isPresent() &&
                 cartRepository.findById(cartId).isPresent() &&
                 cartItemRepository.findById(cartItemId).isPresent()) {
             Optional<Cart> cart = cartRepository.findById(cartId);
-                CartItem cartItem = cartItemRepository.findById(cartItemId).get();
-                cartItem.getProducts().removeIf(product -> product.getId().equals(productId));
-                cartItem.setCart(cart.get());
-                cartItem.setQuantity(1);
-                cartItem.setPrice(cartItem.getProducts().stream()
-                        .map(x -> x.getPrice())
-                        .reduce(BigDecimal.ZERO, BigDecimal::add).multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+            CartItem cartItem = cartItemRepository.findById(cartItemId).get();
+            cartItem.getProducts().removeIf(product -> product.getId().equals(productId));
+            cartItem.setCart(cart.get());
+            cartItem.setQuantity(1);
+            cartItem.setPrice(cartItem.getProducts().stream()
+                    .map(x -> x.getPrice())
+                    .reduce(BigDecimal.ZERO, BigDecimal::add).multiply(BigDecimal.valueOf(cartItem.getQuantity())));
             CartItem response = cartItemRepository.saveAndFlush(cartItem);
-            if(!response.getProducts().stream().anyMatch(product -> product.getId().equals(productId))){
+            if (!response.getProducts().stream().anyMatch(product -> product.getId().equals(productId))) {
                 return true;
             }
         }
@@ -149,13 +149,13 @@ public class CartServiceImpl implements CartService {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(cart, CartDto.class);
     }
-    
+
     private CartItem cartItemFromDto(CartItemDto cartItemDto) {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(cartItemDto, CartItem.class);
     }
-    
-    private CartItemDto cartItemDtoFromCartItem(CartItem cartItem){
+
+    private CartItemDto cartItemDtoFromCartItem(CartItem cartItem) {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(cartItem, CartItemDto.class);
     }

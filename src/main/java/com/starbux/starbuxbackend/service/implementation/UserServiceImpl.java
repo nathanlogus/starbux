@@ -1,7 +1,7 @@
 package com.starbux.starbuxbackend.service.implementation;
 
-import com.starbux.starbuxbackend.model.User;
 import com.starbux.starbuxbackend.dto.UserDto;
+import com.starbux.starbuxbackend.model.User;
 import com.starbux.starbuxbackend.repository.UserRepository;
 import com.starbux.starbuxbackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Long userId) {
-        if(userRepository.findById(userId).isPresent())
+        if (userRepository.findById(userId).isPresent())
             return userDtoFromUser(userRepository.findById(userId).get());
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested user was not found!");
     }
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(Long userId, UserDto userDto) {
-        if(userRepository.findById(userId).isPresent()) {
+        if (userRepository.findById(userId).isPresent()) {
             log.info("Updating user: {}", userDto);
             User userObject = userRepository.findById(userId).get();
             userObject.setName(userDto.getName());
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean deleteUser(Long userId) {
-        if(userRepository.findById(userId).isPresent()) {
+        if (userRepository.findById(userId).isPresent()) {
             log.info("Deleting user with Id: {}", userId);
             userRepository.deleteById(userId);
             return true;

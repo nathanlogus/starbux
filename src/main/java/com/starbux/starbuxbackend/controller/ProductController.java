@@ -42,7 +42,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> deleteProduct(@PathVariable Long id) {
         boolean isRemoved = productService.deleteProduct(id);
-        if(isRemoved){
+        if (isRemoved) {
             return new ResponseEntity("Succesfully removed product!", HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
