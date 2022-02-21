@@ -62,6 +62,7 @@ public class CartServiceImpl implements CartService {
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested user was not found or couldn't create a new shopping cart!");
     }
+    
 
     @Override
     public CartItemDto createCartItem(Long userId, Long cartId) {
