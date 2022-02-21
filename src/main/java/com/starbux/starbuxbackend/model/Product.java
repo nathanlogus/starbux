@@ -25,7 +25,7 @@ public class Product {
     
     private Currency currency;
     
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "products")
     @JsonBackReference
     private List<CartItem> cartItem;
 }

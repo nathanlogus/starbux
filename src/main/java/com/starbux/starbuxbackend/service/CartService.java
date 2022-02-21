@@ -11,6 +11,7 @@ public interface CartService {
     public CartDto getCart(Long userId, Long cartId);
     public CartDto createCart(Long userId);
     public CartItemDto createCartItem(Long userId, Long cartId);
+    public boolean deleteCartItem(Long userId, Long cartId, Long cartItemId);
     public CartItemDto addProductToCartItem(Long userId, Long cartId, Long cartItemId, Long productId);
-    public CartItemDto removeProductFromCartItem(Long userId, Long cartId, Long cartItemId, Long productId);
+    public boolean removeProductFromCartItem(Long userId, Long cartId, Long cartItemId, Long productId);
 }

@@ -2,8 +2,6 @@ package com.starbux.starbuxbackend.controller;
 
 import com.starbux.starbuxbackend.dto.CartDto;
 import com.starbux.starbuxbackend.dto.CartItemDto;
-import com.starbux.starbuxbackend.dto.UserDto;
-import com.starbux.starbuxbackend.model.Cart;
 import com.starbux.starbuxbackend.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +40,15 @@ public class CartController {
     public ResponseEntity<CartItemDto> addItemToCart(@PathVariable Long userId, @PathVariable Long cartId) {
         return ResponseEntity.ok(cartService.createCartItem(userId, cartId));
     }
+
+    @DeleteMapping("/{userId}/carts/{cartId}")
+    public ResponseEntity deleteItemFromCart(@PathVariable Long userId, @PathVariable Long cartId, @RequestParam(required = true) Long cartItemId) {
+        boolean isRemoved = cartService.deleteCartItem(userId, cartId, cartItemId);
+        if(isRemoved){
+            return new ResponseEntity("Succesfully removed cart item!", HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
     
     @PostMapping("/{userId}/carts/{cartId}/{cartItemId}")
     public ResponseEntity<CartItemDto> addProductToCartItem(@PathVariable Long userId, @PathVariable Long cartId,
@@ -50,8 +57,14 @@ public class CartController {
     }
 
     @DeleteMapping("/{userId}/carts/{cartId}/{cartItemId}")
-    public ResponseEntity<CartItemDto> removeProductFromCartItem(@PathVariable Long userId, @PathVariable Long cartId,
+    public ResponseEntity removeProductFromCartItem(@PathVariable Long userId, @PathVariable Long cartId,
                                                             @PathVariable Long cartItemId, @RequestParam(required = true) Long productId) {
-        return ResponseEntity.ok(cartService.removeProductFromCartItem(userId, cartId, cartItemId, productId));
+        boolean isRemoved = cartService.removeProductFromCartItem(userId, cartId, cartItemId, productId);
+        if(isRemoved){
+            return new ResponseEntity("Succesfully removed product from cart item!", HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    
+    
 }

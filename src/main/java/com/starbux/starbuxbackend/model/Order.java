@@ -1,12 +1,28 @@
 package com.starbux.starbuxbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@Data
+@Entity
+@Table(name="\"ORDER\"")
 public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonManagedReference
     private User user;
+    
     private Date orderDate;
-    private String status;
-    private BigDecimal total;
+
+    private BigDecimal originalTotal;
+    
+    private BigDecimal totalWithDiscount;
 }

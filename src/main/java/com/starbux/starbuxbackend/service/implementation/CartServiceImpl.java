@@ -88,6 +88,17 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public boolean deleteCartItem(Long userId, Long cartId, Long cartItemId) {
+        if(userRepository.findById(userId).isPresent() &&
+                cartRepository.findById(cartId).isPresent() &&
+                cartItemRepository.findById(cartItemId).isPresent()){
+            cartItemRepository.deleteById(cartItemId);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public CartItemDto addProductToCartItem(Long userId, Long cartId, Long cartItemId, Long productId) {
         if( userRepository.findById(userId).isPresent() &&
             cartRepository.findById(cartId).isPresent() &&
@@ -109,7 +120,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartItemDto removeProductFromCartItem(Long userId, Long cartId, Long cartItemId, Long productId) {
+    public boolean removeProductFromCartItem(Long userId, Long cartId, Long cartItemId, Long productId) {
         if( userRepository.findById(userId).isPresent() &&
                 cartRepository.findById(cartId).isPresent() &&
                 cartItemRepository.findById(cartItemId).isPresent()) {
@@ -121,9 +132,12 @@ public class CartServiceImpl implements CartService {
                 cartItem.setPrice(cartItem.getProducts().stream()
                         .map(x -> x.getPrice())
                         .reduce(BigDecimal.ZERO, BigDecimal::add).multiply(BigDecimal.valueOf(cartItem.getQuantity())));
-                return cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
+            CartItem response = cartItemRepository.saveAndFlush(cartItem);
+            if(!response.getProducts().stream().anyMatch(product -> product.getId().equals(productId))){
+                return true;
+            }
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't remove product from cart item!");
+        return false;
     }
 
     private Cart cartFromDto(CartDto cartDto) {
