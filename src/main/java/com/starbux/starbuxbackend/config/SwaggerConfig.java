@@ -17,21 +17,21 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.starbux.starbuxbackend"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     private ApiInfo apiInfo() {
-        ApiInfo apiInfo = new ApiInfoBuilder()
-                .title ("Kalah REST Service")
-                .description ("This is the backend application for Kalah")
+        return new ApiInfoBuilder()
+                .title ("Starbux REST Service")
+                .description ("This is the backend application for Starbux")
                 .license("MIT")
                 .licenseUrl("https://opensource.org/licenses/MIT")
                 .version("1.0.0")
                 .contact(new Contact("Nathan Ribeiro","https://github.com/nathanlogus", "nathanpirral@gmail.com"))
                 .build();
-        return apiInfo;
     }
 }

@@ -40,10 +40,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deteleUser(@PathVariable Long id){
+    public ResponseEntity<Long> deleteUser(@PathVariable Long id){
         boolean isRemoved = userService.deleteUser(id);
         if(isRemoved){
-            return new ResponseEntity<>(id, HttpStatus.OK);
+            return new ResponseEntity("Succesfully removed user!", HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
