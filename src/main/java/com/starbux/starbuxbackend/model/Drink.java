@@ -7,15 +7,13 @@ import java.util.Currency;
 
 @Data
 @Entity
-@Table(name="PRODUCT")
-public class Product {
+@Table(name="DRINK")
+public class Drink {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-
-    private ProductType productType;
 
     private Double price;
 

@@ -24,7 +24,6 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-
         ApiInfo apiInfo = new ApiInfoBuilder()
                 .title ("Kalah REST Service")
                 .description ("This is the backend application for Kalah")
