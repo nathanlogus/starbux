@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -107,6 +106,24 @@ public class CartServiceImpl implements CartService {
             }
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't add product to cart item!");
+    }
+
+    @Override
+    public CartItemDto removeProductFromCartItem(Long userId, Long cartId, Long cartItemId, Long productId) {
+        if( userRepository.findById(userId).isPresent() &&
+                cartRepository.findById(cartId).isPresent() &&
+                cartItemRepository.findById(cartItemId).isPresent()) {
+            Optional<Cart> cart = cartRepository.findById(cartId);
+                CartItem cartItem = cartItemRepository.findById(cartItemId).get();
+                cartItem.getProducts().removeIf(product -> product.getId().equals(productId));
+                cartItem.setCart(cart.get());
+                cartItem.setQuantity(1);
+                cartItem.setPrice(cartItem.getProducts().stream()
+                        .map(x -> x.getPrice())
+                        .reduce(BigDecimal.ZERO, BigDecimal::add).multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+                return cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't remove product from cart item!");
     }
 
     private Cart cartFromDto(CartDto cartDto) {
