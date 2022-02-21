@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class Product {
 
     private String name;
 
-    private Double price;
+    private BigDecimal price;
 
     private ProductType productType;
     
@@ -26,6 +27,5 @@ public class Product {
     
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products")
     @JsonBackReference
-    @JsonManagedReference
     private List<CartItem> cartItem;
 }

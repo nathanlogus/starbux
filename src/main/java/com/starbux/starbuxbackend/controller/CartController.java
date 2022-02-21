@@ -40,7 +40,12 @@ public class CartController {
 
     @PostMapping("/{userId}/carts/{cartId}")
     public ResponseEntity<CartItemDto> addItemToCart(@PathVariable Long userId, @PathVariable Long cartId) {
-        return null;
+        return ResponseEntity.ok(cartService.createCartItem(userId, cartId));
     }
     
+    @PostMapping("/{userId}/carts/{cartId}/{cartItemId}")
+    public ResponseEntity<CartItemDto> addProductToCartItem(@PathVariable Long userId, @PathVariable Long cartId,
+        @PathVariable Long cartItemId, @RequestBody Long productId) {
+        return ResponseEntity.ok(cartService.addProductToCartItem(userId, cartId, cartItemId, productId));
+    }
 }

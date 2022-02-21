@@ -24,6 +24,7 @@ public class Cart {
     private BigDecimal subtotal;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "cart", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<CartItem> cartItems;
 
 }

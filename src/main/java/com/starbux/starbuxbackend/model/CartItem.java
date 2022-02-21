@@ -13,11 +13,12 @@ import java.util.List;
 @Table(name="CART_ITEM")
 public class CartItem {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id", insertable = true, updatable = false)
-    @JsonManagedReference
+    @JsonBackReference
     private Cart cart;
     
     private Integer quantity;
@@ -29,7 +30,6 @@ public class CartItem {
             name = "item_products",
             joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
-    @JsonBackReference
     @JsonManagedReference
     private List<Product> products;
 }

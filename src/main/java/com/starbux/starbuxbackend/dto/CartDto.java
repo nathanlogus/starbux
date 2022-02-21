@@ -1,6 +1,5 @@
 package com.starbux.starbuxbackend.dto;
 
-import com.starbux.starbuxbackend.model.CartItem;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -10,5 +9,5 @@ import java.util.List;
 public class CartDto {
     private Long id;
     private BigDecimal subtotal;
-    private List<CartItem> cartItems;
+    private List<CartItemDto> cartItems;
 }

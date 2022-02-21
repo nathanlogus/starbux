@@ -11,4 +11,5 @@ public interface CartService {
     public CartDto getCart(Long userId, Long cartId);
     public CartDto createCart(Long userId);
     public CartItemDto createCartItem(Long userId, Long cartId);
+    public CartItemDto addProductToCartItem(Long userId, Long cartId, Long cartItemId, Long productId);
 }
