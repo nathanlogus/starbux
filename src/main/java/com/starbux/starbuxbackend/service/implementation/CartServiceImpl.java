@@ -47,17 +47,11 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDto getCart(Long userId, Long cartId) {
-        Optional<Cart> matchingObject =
-                userRepository.findById(userId)
-                        .get().getCarts().stream()
-                        .filter(cart -> cart.getId().equals(cartId)).findFirst();
-        if (matchingObject.isPresent()) {
-            matchingObject.get().setSubtotal(matchingObject.get().getCartItems().stream()
-                    .map(x -> x.getPrice().multiply(BigDecimal.valueOf(x.getQuantity())))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add));
-            return cartDtoFromCart(matchingObject.get());
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested cart was not found or doesn't belong to that user!");
+        Cart cart = cartRepository.findById(cartId).get();
+        cart.setSubtotal(cart.getCartItems().stream()
+                .map(x -> x.getPrice().multiply(BigDecimal.valueOf(x.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+        return cartDtoFromCart(cartRepository.save(cart));
     }
 
     @Override
