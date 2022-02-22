@@ -7637,3 +7637,67 @@ org.springframework.core.convert.ConverterNotFoundException: No converter found 
 2022-02-22 22:44:40.452  INFO 93693 --- [restartedMain] com.starbux.StarbuxBackendApplication    : Started StarbuxBackendApplication in 4.332 seconds (JVM running for 5.006)
 2022-02-22 22:44:40.454  INFO 93693 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
 2022-02-22 22:44:40.456  INFO 93693 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+2022-02-22 22:45:08.698  INFO 93971 --- [restartedMain] com.starbux.StarbuxBackendApplication    : Starting StarbuxBackendApplication using Java 11.0.13 on AMS064.local with PID 93971 (/Users/nathan.ribeiro/Best/starbux/target/classes started by nathan.ribeiro in /Users/nathan.ribeiro/Best/starbux)
+2022-02-22 22:45:08.702  INFO 93971 --- [restartedMain] com.starbux.StarbuxBackendApplication    : The following profiles are active: dev
+2022-02-22 22:45:08.788  INFO 93971 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-02-22 22:45:08.788  INFO 93971 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-02-22 22:45:09.664  INFO 93971 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-02-22 22:45:09.732  INFO 93971 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 62 ms. Found 5 JPA repository interfaces.
+2022-02-22 22:45:10.284  INFO 93971 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-02-22 22:45:10.294  INFO 93971 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-02-22 22:45:10.294  INFO 93971 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.46]
+2022-02-22 22:45:10.363  INFO 93971 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-02-22 22:45:10.363  INFO 93971 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1574 ms
+2022-02-22 22:45:10.541  INFO 93971 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-02-22 22:45:10.601  INFO 93971 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.31.Final
+2022-02-22 22:45:10.725  INFO 93971 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-02-22 22:45:10.817  INFO 93971 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-02-22 22:45:10.984  INFO 93971 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-02-22 22:45:10.998  INFO 93971 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2022-02-22 22:45:11.689  INFO 93971 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-02-22 22:45:11.695  INFO 93971 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-02-22 22:45:12.240  WARN 93971 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-02-22 22:45:12.369  INFO 93971 --- [restartedMain] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2Controller#getDocumentation(String, HttpServletRequest)]
+2022-02-22 22:45:12.457  INFO 93971 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-02-22 22:45:12.623  INFO 93971 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-02-22 22:45:12.623  INFO 93971 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2022-02-22 22:45:12.638  INFO 93971 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2022-02-22 22:45:12.671  INFO 93971 --- [restartedMain] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2022-02-22 22:45:12.689  INFO 93971 --- [restartedMain] com.starbux.StarbuxBackendApplication    : Started StarbuxBackendApplication in 4.505 seconds (JVM running for 5.474)
+2022-02-22 22:45:12.690  INFO 93971 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+2022-02-22 22:45:12.692  INFO 93971 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+2022-02-22 22:45:37.640  INFO 93971 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-02-22 22:45:37.642  INFO 93971 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-02-22 22:45:37.643  INFO 93971 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2022-02-22 22:45:55.161  INFO 93993 --- [restartedMain] com.starbux.StarbuxBackendApplication    : Starting StarbuxBackendApplication using Java 11.0.13 on AMS064.local with PID 93993 (/Users/nathan.ribeiro/Best/starbux/target/classes started by nathan.ribeiro in /Users/nathan.ribeiro/Best/starbux)
+2022-02-22 22:45:55.165  INFO 93993 --- [restartedMain] com.starbux.StarbuxBackendApplication    : The following profiles are active: dev
+2022-02-22 22:45:55.255  INFO 93993 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-02-22 22:45:55.256  INFO 93993 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-02-22 22:45:56.100  INFO 93993 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-02-22 22:45:56.157  INFO 93993 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 50 ms. Found 5 JPA repository interfaces.
+2022-02-22 22:45:56.891  INFO 93993 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-02-22 22:45:56.913  INFO 93993 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-02-22 22:45:56.914  INFO 93993 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.46]
+2022-02-22 22:45:57.027  INFO 93993 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-02-22 22:45:57.028  INFO 93993 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1771 ms
+2022-02-22 22:45:57.205  INFO 93993 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-02-22 22:45:57.247  INFO 93993 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.31.Final
+2022-02-22 22:45:57.406  INFO 93993 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-02-22 22:45:57.508  INFO 93993 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-02-22 22:45:57.683  INFO 93993 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-02-22 22:45:57.698  INFO 93993 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2022-02-22 22:45:58.443  INFO 93993 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-02-22 22:45:58.450  INFO 93993 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-02-22 22:45:59.123  WARN 93993 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-02-22 22:45:59.255  INFO 93993 --- [restartedMain] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2Controller#getDocumentation(String, HttpServletRequest)]
+2022-02-22 22:45:59.347  INFO 93993 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-02-22 22:45:59.541  INFO 93993 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-02-22 22:45:59.542  INFO 93993 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2022-02-22 22:45:59.560  INFO 93993 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2022-02-22 22:45:59.596  INFO 93993 --- [restartedMain] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2022-02-22 22:45:59.759  INFO 93993 --- [restartedMain] com.starbux.StarbuxBackendApplication    : Started StarbuxBackendApplication in 5.21 seconds (JVM running for 5.954)
+2022-02-22 22:45:59.760  INFO 93993 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+2022-02-22 22:45:59.763  INFO 93993 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+2022-02-22 22:46:00.005  INFO 93993 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-02-22 22:46:00.006  INFO 93993 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-02-22 22:46:00.008  INFO 93993 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
