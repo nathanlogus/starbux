@@ -1,16 +1,16 @@
 package com.starbux.service.implementation;
 
+import com.starbux.dto.OrderDto;
+import com.starbux.mapper.OrderMapper;
 import com.starbux.model.Cart;
 import com.starbux.model.CartItem;
 import com.starbux.model.Order;
 import com.starbux.model.ProductType;
+import com.starbux.repository.CartRepository;
 import com.starbux.repository.OrderRepository;
 import com.starbux.repository.UserRepository;
-import com.starbux.dto.OrderDto;
-import com.starbux.repository.CartRepository;
 import com.starbux.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,6 +34,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     OrderRepository orderRepository;
 
+    @Autowired
+    OrderMapper orderMapper;
+
     @Override
     public OrderDto createOrder(Long userId, Long cartId) {
         if (orderRepository.findByCartId(cartId) != null) {
@@ -49,14 +52,14 @@ public class OrderServiceImpl implements OrderService {
                     .map(x -> x.getPrice().multiply(BigDecimal.valueOf(x.getQuantity())))
                     .reduce(BigDecimal.ZERO, BigDecimal::add));
             order.setTotalWithDiscount(calculateDiscounts(order.getCart()));
-            return orderDtoFromOrder(orderRepository.saveAndFlush(order));
+            return orderMapper.orderDtoFromOrder(orderRepository.saveAndFlush(order));
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't close cart to order!");
     }
 
     @Override
     public OrderDto getOrder(Long userId, Long cartId) {
-        return orderDtoFromOrder(orderRepository.findByCartId(cartId));
+        return orderMapper.orderDtoFromOrder(orderRepository.findByCartId(cartId));
     }
 
     public BigDecimal calculateDiscounts(Cart cart) {
@@ -96,8 +99,4 @@ public class OrderServiceImpl implements OrderService {
         return originalPrice;
     }
 
-    private OrderDto orderDtoFromOrder(Order order) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(order, OrderDto.class);
-    }
 }

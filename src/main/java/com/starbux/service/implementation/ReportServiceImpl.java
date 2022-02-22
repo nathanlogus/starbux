@@ -1,18 +1,14 @@
 package com.starbux.service.implementation;
 
-import com.starbux.dto.ProductDto;
+import com.starbux.dto.AmountPerCustomerDto;
 import com.starbux.dto.ToppingsPerDrinkDto;
-import com.starbux.dto.UserDto;
+import com.starbux.mapper.ProductMapper;
+import com.starbux.mapper.UserMapper;
 import com.starbux.model.ProductType;
-import com.starbux.model.User;
-import com.starbux.repository.OrderRepository;
+import com.starbux.repository.ProductRepository;
 import com.starbux.repository.UserRepository;
 import com.starbux.service.ReportService;
-import com.starbux.dto.AmountPerCustomerDto;
-import com.starbux.model.Product;
-import com.starbux.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,13 +26,16 @@ public class ReportServiceImpl implements ReportService {
     ProductRepository productRepository;
     
     @Autowired
-    OrderRepository orderRepository;
+    ProductMapper productMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public List<AmountPerCustomerDto> amountPerCustomerReport() {
         return userRepository.findAll().stream().map(user -> {
             AmountPerCustomerDto amountCustomer = new AmountPerCustomerDto();
-            amountCustomer.setUser(userDtoFromUser(user));
+            amountCustomer.setUser(userMapper.userDtoFromUser(user));
             amountCustomer.setAmount(user.getOrders().stream()
                     .map(order -> order.getTotalWithDiscount())
                     .reduce(BigDecimal.ZERO, BigDecimal::add));
@@ -48,18 +47,9 @@ public class ReportServiceImpl implements ReportService {
     public List<ToppingsPerDrinkDto> toppingsPerDrink() {
         return productRepository.findAllByProductType(ProductType.DRINK).stream().map(drink -> {
             ToppingsPerDrinkDto toppingsPerDrink = new ToppingsPerDrinkDto();
-            toppingsPerDrink.setDrink(productDtoFromProduct(drink));
+            toppingsPerDrink.setDrink(productMapper.productDtoFromProduct(drink));
             return toppingsPerDrink;
         }).collect(Collectors.toList());
     }
 
-    private UserDto userDtoFromUser(User user) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(user, UserDto.class);
-    }
-    
-    private ProductDto productDtoFromProduct(Product product){
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(product, ProductDto.class);
-    }
 }

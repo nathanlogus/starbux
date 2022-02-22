@@ -1,18 +1,18 @@
 package com.starbux.service.implementation;
 
-import com.starbux.dto.CartItemDto;
-import com.starbux.model.Cart;
-import com.starbux.repository.CartItemRepository;
-import com.starbux.repository.UserRepository;
 import com.starbux.dto.CartDto;
+import com.starbux.dto.CartItemDto;
+import com.starbux.mapper.CartMapper;
+import com.starbux.model.Cart;
 import com.starbux.model.CartItem;
 import com.starbux.model.Product;
 import com.starbux.model.User;
+import com.starbux.repository.CartItemRepository;
 import com.starbux.repository.CartRepository;
 import com.starbux.repository.ProductRepository;
+import com.starbux.repository.UserRepository;
 import com.starbux.service.CartService;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,11 +38,14 @@ public class CartServiceImpl implements CartService {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    CartMapper cartMapper;
+
 
     @Override
     public List<CartDto> getUserCarts(Long userId) {
         List<Cart> userCarts = userRepository.findById(userId).get().getCarts();
-        return userCarts.stream().map(cart -> cartDtoFromCart(cart)).collect(Collectors.toList());
+        return userCarts.stream().map(cart -> cartMapper.cartDtoFromCart(cart)).collect(Collectors.toList());
     }
 
     @Override
@@ -51,7 +54,7 @@ public class CartServiceImpl implements CartService {
         cart.setSubtotal(cart.getCartItems().stream()
                 .map(x -> x.getPrice().multiply(BigDecimal.valueOf(x.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
-        return cartDtoFromCart(cartRepository.save(cart));
+        return cartMapper.cartDtoFromCart(cartRepository.save(cart));
     }
 
     @Override
@@ -61,7 +64,7 @@ public class CartServiceImpl implements CartService {
             Cart cart = new Cart();
             cart.setUser(user);
             cart.setSubtotal(BigDecimal.valueOf(0));
-            return cartDtoFromCart(cartRepository.saveAndFlush(cart));
+            return cartMapper.cartDtoFromCart(cartRepository.saveAndFlush(cart));
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested user was not found or couldn't create a new shopping cart!");
     }
@@ -75,7 +78,7 @@ public class CartServiceImpl implements CartService {
                 cartItem.setCart(cart.get());
                 cartItem.setPrice(BigDecimal.valueOf(0));
                 cartItem.setQuantity(0);
-                return cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
+                return cartMapper.cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
             }
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't create cart item!");
@@ -107,7 +110,7 @@ public class CartServiceImpl implements CartService {
                 cartItem.setPrice(cartItem.getProducts().stream()
                         .map(x -> x.getPrice())
                         .reduce(BigDecimal.ZERO, BigDecimal::add));
-                return cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
+                return cartMapper.cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
             }
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't add product to cart item!");
@@ -123,7 +126,7 @@ public class CartServiceImpl implements CartService {
             cartItem.setPrice(cartItem.getProducts().stream()
                     .map(x -> x.getPrice())
                     .reduce(BigDecimal.ZERO, BigDecimal::add));
-            return cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
+            return cartMapper.cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't update product quantity on cart item!");
     }
@@ -147,15 +150,5 @@ public class CartServiceImpl implements CartService {
             }
         }
         return false;
-    }
-
-    private CartDto cartDtoFromCart(Cart cart) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(cart, CartDto.class);
-    }
-
-    private CartItemDto cartItemDtoFromCartItem(CartItem cartItem) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(cartItem, CartItemDto.class);
     }
 }

@@ -1,12 +1,12 @@
 package com.starbux.service.implementation;
 
 import com.starbux.dto.ProductDto;
+import com.starbux.mapper.ProductMapper;
 import com.starbux.model.Product;
 import com.starbux.model.ProductType;
 import com.starbux.repository.ProductRepository;
 import com.starbux.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,15 +22,18 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    ProductMapper productMapper;
+
     @Override
     public List<ProductDto> getAllProducts() {
-        return productRepository.findAll().stream().map(product -> productDtoFromProduct(product)).collect(Collectors.toList());
+        return productRepository.findAll().stream().map(product -> productMapper.productDtoFromProduct(product)).collect(Collectors.toList());
     }
 
     @Override
     public ProductDto getProductById(Long productId) {
         if (productRepository.findById(productId).isPresent())
-            return productDtoFromProduct(productRepository.findById(productId).get());
+            return productMapper.productDtoFromProduct(productRepository.findById(productId).get());
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested product was not found!");
     }
 
@@ -38,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto createProduct(ProductDto productDto) {
         log.info("Creating product: {}", productDto);
         if (Stream.of(ProductType.values()).anyMatch(v -> v.name().equals(productDto.getProductType().name()))) {
-            return productDtoFromProduct(productRepository.saveAndFlush(productFromDto(productDto)));
+            return productMapper.productDtoFromProduct(productRepository.saveAndFlush(productMapper.productFromDto(productDto)));
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product type not valid!");
     }
@@ -52,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
             productObject.setProductType(productDto.getProductType());
             productObject.setPrice(productDto.getPrice());
             productObject.setCurrency(productDto.getCurrency());
-            return productDtoFromProduct(productRepository.saveAndFlush(productObject));
+            return productMapper.productDtoFromProduct(productRepository.saveAndFlush(productObject));
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested user was not found!");
     }
@@ -67,13 +70,4 @@ public class ProductServiceImpl implements ProductService {
         return false;
     }
 
-    private Product productFromDto(ProductDto productDto) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(productDto, Product.class);
-    }
-
-    private ProductDto productDtoFromProduct(Product product) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(product, ProductDto.class);
-    }
 }
