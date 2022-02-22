@@ -124,13 +124,13 @@ public class CartServiceImpl implements CartService {
         if (userRepository.findById(userId).isPresent() &&
                 cartRepository.findById(cartId).isPresent() &&
                 cartItemRepository.findById(cartItemId).isPresent()) {
-                CartItem cartItem = cartItemRepository.findById(cartItemId).get();
-                cartItem.setQuantity(quantity);
-                cartItem.setPrice(cartItem.getProducts().stream()
-                        .map(x -> x.getPrice())
-                        .reduce(BigDecimal.ZERO, BigDecimal::add));
-                return cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
-            }
+            CartItem cartItem = cartItemRepository.findById(cartItemId).get();
+            cartItem.setQuantity(quantity);
+            cartItem.setPrice(cartItem.getProducts().stream()
+                    .map(x -> x.getPrice())
+                    .reduce(BigDecimal.ZERO, BigDecimal::add));
+            return cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
+        }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't update product quantity on cart item!");
     }
 

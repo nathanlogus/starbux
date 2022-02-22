@@ -1,5 +1,6 @@
 package com.starbux.starbuxbackend.dto;
 
+import com.starbux.starbuxbackend.model.Cart;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -11,4 +12,5 @@ public class OrderDto {
     private Date orderDate;
     private BigDecimal originalTotal;
     private BigDecimal totalWithDiscount;
+    private Cart cart;
 }

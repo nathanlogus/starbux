@@ -1,5 +1,6 @@
 package com.starbux.starbuxbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,9 +18,11 @@ public class User implements Serializable {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Cart> carts;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Order> orders;
 
 }

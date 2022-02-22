@@ -1,5 +1,6 @@
 package com.starbux.starbuxbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
@@ -17,10 +18,11 @@ public class Cart {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonManagedReference
+    @JsonBackReference
     private User user;
-    
+
     @OneToOne(mappedBy = "cart")
+    @JsonBackReference
     private Order order;
 
     private BigDecimal subtotal;
