@@ -19,6 +19,9 @@ public class Cart {
     @JoinColumn(name = "user_id")
     @JsonManagedReference
     private User user;
+    
+    @OneToOne(mappedBy = "cart")
+    private Order order;
 
     private BigDecimal subtotal;
 

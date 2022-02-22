@@ -18,5 +18,7 @@ public interface CartService {
 
     public CartItemDto addProductToCartItem(Long userId, Long cartId, Long cartItemId, Long productId);
 
+    public CartItemDto updateCartItemQuantity(Long userId, Long cartId, Long cartItemId, Integer quantity);
+
     public boolean removeProductFromCartItem(Long userId, Long cartId, Long cartItemId, Long productId);
 }

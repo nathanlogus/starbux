@@ -25,4 +25,8 @@ public class Order {
     private BigDecimal originalTotal;
 
     private BigDecimal totalWithDiscount;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id", referencedColumnName = "id")
+    private Cart cart;
 }

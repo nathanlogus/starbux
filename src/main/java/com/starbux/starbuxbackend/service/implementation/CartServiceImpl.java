@@ -112,11 +112,26 @@ public class CartServiceImpl implements CartService {
                 cartItem.setQuantity(1);
                 cartItem.setPrice(cartItem.getProducts().stream()
                         .map(x -> x.getPrice())
-                        .reduce(BigDecimal.ZERO, BigDecimal::add).multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+                        .reduce(BigDecimal.ZERO, BigDecimal::add));
                 return cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
             }
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't add product to cart item!");
+    }
+
+    @Override
+    public CartItemDto updateCartItemQuantity(Long userId, Long cartId, Long cartItemId, Integer quantity) {
+        if (userRepository.findById(userId).isPresent() &&
+                cartRepository.findById(cartId).isPresent() &&
+                cartItemRepository.findById(cartItemId).isPresent()) {
+                CartItem cartItem = cartItemRepository.findById(cartItemId).get();
+                cartItem.setQuantity(quantity);
+                cartItem.setPrice(cartItem.getProducts().stream()
+                        .map(x -> x.getPrice())
+                        .reduce(BigDecimal.ZERO, BigDecimal::add));
+                return cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
+            }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't update product quantity on cart item!");
     }
 
     @Override
