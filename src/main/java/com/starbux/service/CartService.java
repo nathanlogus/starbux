@@ -1,24 +1,24 @@
 package com.starbux.service;
 
-import com.starbux.dto.CartDto;
-import com.starbux.dto.CartItemDto;
+import com.starbux.model.Cart;
+import com.starbux.model.CartItem;
 
 import java.util.List;
 
 public interface CartService {
-    public List<CartDto> getUserCarts(Long userId);
+    public List<Cart> getUserCarts(Long userId);
 
-    public CartDto getCart(Long userId, Long cartId);
+    public Cart getCart(Long userId, Long cartId);
 
-    public CartDto createCart(Long userId);
+    public Cart createCart(Long userId);
 
-    public CartItemDto createCartItem(Long userId, Long cartId);
+    public CartItem createCartItem(Long userId, Long cartId);
 
     public boolean deleteCartItem(Long userId, Long cartId, Long cartItemId);
 
-    public CartItemDto addProductToCartItem(Long userId, Long cartId, Long cartItemId, Long productId);
+    public CartItem addProductToCartItem(Long userId, Long cartId, Long cartItemId, Long productId);
 
-    public CartItemDto updateCartItemQuantity(Long userId, Long cartId, Long cartItemId, Integer quantity);
+    public CartItem updateCartItemQuantity(Long userId, Long cartId, Long cartItemId, Integer quantity);
 
     public boolean removeProductFromCartItem(Long userId, Long cartId, Long cartItemId, Long productId);
 }

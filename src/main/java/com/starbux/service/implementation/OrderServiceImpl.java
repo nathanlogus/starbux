@@ -1,6 +1,5 @@
 package com.starbux.service.implementation;
 
-import com.starbux.dto.OrderDto;
 import com.starbux.mapper.OrderMapper;
 import com.starbux.model.Cart;
 import com.starbux.model.CartItem;
@@ -23,7 +22,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service
+@Service("orderService")
 public class OrderServiceImpl implements OrderService {
     @Autowired
     UserRepository userRepository;
@@ -38,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     OrderMapper orderMapper;
 
     @Override
-    public OrderDto createOrder(Long userId, Long cartId) {
+    public Order createOrder(Long userId, Long cartId) {
         if (orderRepository.findByCartId(cartId) != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This cart already have an order!");
         }
@@ -52,14 +51,14 @@ public class OrderServiceImpl implements OrderService {
                     .map(x -> x.getPrice().multiply(BigDecimal.valueOf(x.getQuantity())))
                     .reduce(BigDecimal.ZERO, BigDecimal::add));
             order.setTotalWithDiscount(calculateDiscounts(order.getCart()));
-            return orderMapper.orderDtoFromOrder(orderRepository.saveAndFlush(order));
+            return orderRepository.saveAndFlush(order);
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't close cart to order!");
     }
 
     @Override
-    public OrderDto getOrder(Long userId, Long cartId) {
-        return orderMapper.orderDtoFromOrder(orderRepository.findByCartId(cartId));
+    public Order getOrder(Long userId, Long cartId) {
+        return orderRepository.findByCartId(cartId);
     }
 
     public BigDecimal calculateDiscounts(Cart cart) {

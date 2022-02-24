@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
-@Service
+@Service("userService")
 public class UserServiceImpl implements UserService {
+
     @Autowired
     UserRepository userRepository;
 
@@ -24,31 +24,31 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream().map(user -> userMapper.userDtoFromUser(user)).collect(Collectors.toList());
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
-    public UserDto getUserById(Long userId) {
-        if (userRepository.findById(userId).isPresent())
-            return userMapper.userDtoFromUser(userRepository.findById(userId).get());
+    public User getUserById(Long userId) {
+        if (userRepository.findById(userId).isPresent()) {
+            return userRepository.getById(userId);
+        }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested user was not found!");
     }
 
     @Override
-    public UserDto createUser(UserDto userDto) {
+    public User createUser(UserDto userDto) {
         log.info("Creating user: {}", userDto);
-        User userObject = userMapper.userFromDto(userDto);
-        return userMapper.userDtoFromUser(userRepository.saveAndFlush(userObject));
+        return userRepository.saveAndFlush(userMapper.userFromDto(userDto));
     }
 
     @Override
-    public UserDto updateUser(Long userId, UserDto userDto) {
+    public User updateUser(Long userId, UserDto userDto) {
         if (userRepository.findById(userId).isPresent()) {
             log.info("Updating user: {}", userDto);
-            User userObject = userRepository.findById(userId).get();
+            User userObject = userRepository.getById(userId);
             userObject.setName(userDto.getName());
-            return userMapper.userDtoFromUser(userRepository.saveAndFlush(userObject));
+            return userRepository.saveAndFlush(userObject);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested user was not found!");
     }

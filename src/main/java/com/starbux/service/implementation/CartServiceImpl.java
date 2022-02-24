@@ -1,7 +1,5 @@
 package com.starbux.service.implementation;
 
-import com.starbux.dto.CartDto;
-import com.starbux.dto.CartItemDto;
 import com.starbux.mapper.CartMapper;
 import com.starbux.model.Cart;
 import com.starbux.model.CartItem;
@@ -20,11 +18,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
-@Service
+@Service("cartService")
 public class CartServiceImpl implements CartService {
     @Autowired
     UserRepository userRepository;
@@ -43,42 +39,41 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public List<CartDto> getUserCarts(Long userId) {
-        List<Cart> userCarts = userRepository.findById(userId).get().getCarts();
-        return userCarts.stream().map(cart -> cartMapper.cartDtoFromCart(cart)).collect(Collectors.toList());
+    public List<Cart> getUserCarts(Long userId) {
+        return userRepository.getById(userId).getCarts();
     }
 
     @Override
-    public CartDto getCart(Long userId, Long cartId) {
-        Cart cart = cartRepository.findById(cartId).get();
+    public Cart getCart(Long userId, Long cartId) {
+        Cart cart = cartRepository.getById(cartId);
         cart.setSubtotal(cart.getCartItems().stream()
                 .map(x -> x.getPrice().multiply(BigDecimal.valueOf(x.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
-        return cartMapper.cartDtoFromCart(cartRepository.save(cart));
+        return cartRepository.save(cart);
     }
 
     @Override
-    public CartDto createCart(Long userId) {
+    public Cart createCart(Long userId) {
         if (userRepository.findById(userId).isPresent()) {
-            User user = userRepository.findById(userId).get();
+            User user = userRepository.getById(userId);
             Cart cart = new Cart();
             cart.setUser(user);
             cart.setSubtotal(BigDecimal.valueOf(0));
-            return cartMapper.cartDtoFromCart(cartRepository.saveAndFlush(cart));
+            return cartRepository.saveAndFlush(cart);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested user was not found or couldn't create a new shopping cart!");
     }
 
     @Override
-    public CartItemDto createCartItem(Long userId, Long cartId) {
+    public CartItem createCartItem(Long userId, Long cartId) {
         if (userRepository.findById(userId).isPresent() && cartRepository.findById(cartId).isPresent()) {
-            Optional<Cart> cart = cartRepository.findById(cartId);
-            if (cart.isPresent()) {
+            Cart cart = cartRepository.getById(cartId);
+            if (cartRepository.findById(cartId).isPresent()) {
                 CartItem cartItem = new CartItem();
-                cartItem.setCart(cart.get());
+                cartItem.setCart(cart);
                 cartItem.setPrice(BigDecimal.valueOf(0));
                 cartItem.setQuantity(0);
-                return cartMapper.cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
+                return cartItemRepository.saveAndFlush(cartItem);
             }
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't create cart item!");
@@ -96,28 +91,33 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartItemDto addProductToCartItem(Long userId, Long cartId, Long cartItemId, Long productId) {
+    public CartItem addProductToCartItem(Long userId, Long cartId, Long cartItemId, Long productId) {
         if (userRepository.findById(userId).isPresent() &&
                 cartRepository.findById(cartId).isPresent() &&
                 cartItemRepository.findById(cartItemId).isPresent()) {
-            Optional<Cart> cart = cartRepository.findById(cartId);
-            Optional<Product> product = productRepository.findById(productId);
-            if (product.isPresent()) {
+            Cart cart = cartRepository.getById(cartId);
+            Product product = productRepository.getById(productId);
+            if (productRepository.findById(productId).isPresent()) {
                 CartItem cartItem = cartItemRepository.findById(cartItemId).get();
-                cartItem.getProducts().add(product.get());
-                cartItem.setCart(cart.get());
+                cartItem.getProducts().add(product);
+                cartItem.setCart(cart);
                 cartItem.setQuantity(1);
                 cartItem.setPrice(cartItem.getProducts().stream()
                         .map(x -> x.getPrice())
                         .reduce(BigDecimal.ZERO, BigDecimal::add));
-                return cartMapper.cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
+                CartItem createdItem = cartItemRepository.saveAndFlush(cartItem);
+                cart.setSubtotal(cart.getCartItems().stream()
+                        .map(x -> x.getPrice().multiply(BigDecimal.valueOf(x.getQuantity())))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add));
+                cartRepository.saveAndFlush(cart);
+                return createdItem;
             }
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't add product to cart item!");
     }
 
     @Override
-    public CartItemDto updateCartItemQuantity(Long userId, Long cartId, Long cartItemId, Integer quantity) {
+    public CartItem updateCartItemQuantity(Long userId, Long cartId, Long cartItemId, Integer quantity) {
         if (userRepository.findById(userId).isPresent() &&
                 cartRepository.findById(cartId).isPresent() &&
                 cartItemRepository.findById(cartItemId).isPresent()) {
@@ -126,7 +126,13 @@ public class CartServiceImpl implements CartService {
             cartItem.setPrice(cartItem.getProducts().stream()
                     .map(x -> x.getPrice())
                     .reduce(BigDecimal.ZERO, BigDecimal::add));
-            return cartMapper.cartItemDtoFromCartItem(cartItemRepository.saveAndFlush(cartItem));
+            CartItem updatedItem = cartItemRepository.saveAndFlush(cartItem);
+            Cart cart = cartRepository.getById(cartId);
+            cart.setSubtotal(cart.getCartItems().stream()
+                    .map(x -> x.getPrice().multiply(BigDecimal.valueOf(x.getQuantity())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add));
+            cartRepository.saveAndFlush(cart);
+            return updatedItem;
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't update product quantity on cart item!");
     }
@@ -136,15 +142,19 @@ public class CartServiceImpl implements CartService {
         if (userRepository.findById(userId).isPresent() &&
                 cartRepository.findById(cartId).isPresent() &&
                 cartItemRepository.findById(cartItemId).isPresent()) {
-            Optional<Cart> cart = cartRepository.findById(cartId);
+            Cart cart = cartRepository.getById(cartId);
             CartItem cartItem = cartItemRepository.findById(cartItemId).get();
             cartItem.getProducts().removeIf(product -> product.getId().equals(productId));
-            cartItem.setCart(cart.get());
+            cartItem.setCart(cart);
             cartItem.setQuantity(1);
             cartItem.setPrice(cartItem.getProducts().stream()
                     .map(x -> x.getPrice())
                     .reduce(BigDecimal.ZERO, BigDecimal::add).multiply(BigDecimal.valueOf(cartItem.getQuantity())));
             CartItem response = cartItemRepository.saveAndFlush(cartItem);
+            cart.setSubtotal(cart.getCartItems().stream()
+                    .map(x -> x.getPrice().multiply(BigDecimal.valueOf(x.getQuantity())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add));
+            cartRepository.saveAndFlush(cart);
             if (!response.getProducts().stream().anyMatch(product -> product.getId().equals(productId))) {
                 return true;
             }

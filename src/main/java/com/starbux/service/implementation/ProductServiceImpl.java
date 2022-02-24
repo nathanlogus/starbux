@@ -13,11 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
-@Service
+@Service("productService")
 public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductRepository productRepository;
@@ -26,28 +25,28 @@ public class ProductServiceImpl implements ProductService {
     ProductMapper productMapper;
 
     @Override
-    public List<ProductDto> getAllProducts() {
-        return productRepository.findAll().stream().map(product -> productMapper.productDtoFromProduct(product)).collect(Collectors.toList());
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
     @Override
-    public ProductDto getProductById(Long productId) {
+    public Product getProductById(Long productId) {
         if (productRepository.findById(productId).isPresent())
-            return productMapper.productDtoFromProduct(productRepository.findById(productId).get());
+            return productRepository.getById(productId);
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested product was not found!");
     }
 
     @Override
-    public ProductDto createProduct(ProductDto productDto) {
+    public Product createProduct(ProductDto productDto) {
         log.info("Creating product: {}", productDto);
         if (Stream.of(ProductType.values()).anyMatch(v -> v.name().equals(productDto.getProductType().name()))) {
-            return productMapper.productDtoFromProduct(productRepository.saveAndFlush(productMapper.productFromDto(productDto)));
+            return productRepository.saveAndFlush(productMapper.productFromDto(productDto));
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product type not valid!");
     }
 
     @Override
-    public ProductDto updateProduct(Long productId, ProductDto productDto) {
+    public Product updateProduct(Long productId, ProductDto productDto) {
         if (productRepository.findById(productId).isPresent()) {
             log.info("Updating product: {}", productId);
             Product productObject = productRepository.findById(productId).get();
@@ -55,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
             productObject.setProductType(productDto.getProductType());
             productObject.setPrice(productDto.getPrice());
             productObject.setCurrency(productDto.getCurrency());
-            return productMapper.productDtoFromProduct(productRepository.saveAndFlush(productObject));
+            return productRepository.saveAndFlush(productObject);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Requested user was not found!");
     }

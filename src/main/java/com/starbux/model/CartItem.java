@@ -2,7 +2,7 @@ package com.starbux.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,6 +10,9 @@ import java.util.List;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "CART_ITEM")
 public class CartItem {
     @Id
@@ -21,8 +24,10 @@ public class CartItem {
     @JsonBackReference
     private Cart cart;
 
+    @NonNull
     private Integer quantity;
 
+    @NonNull
     private BigDecimal price;
 
     @ManyToMany

@@ -16,15 +16,16 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+
 @Slf4j
+@Service("reportService")
 public class ReportServiceImpl implements ReportService {
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     ProductRepository productRepository;
-    
+
     @Autowired
     ProductMapper productMapper;
 

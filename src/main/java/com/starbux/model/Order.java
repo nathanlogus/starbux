@@ -2,7 +2,7 @@ package com.starbux.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,6 +10,9 @@ import java.util.Date;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "\"ORDER\"")
 public class Order {
     @Id
@@ -21,10 +24,13 @@ public class Order {
     @JsonBackReference
     private User user;
 
+    @NonNull
     private Date orderDate;
 
+    @NonNull
     private BigDecimal originalTotal;
 
+    @NonNull
     private BigDecimal totalWithDiscount;
 
     @OneToOne(cascade = CascadeType.ALL)

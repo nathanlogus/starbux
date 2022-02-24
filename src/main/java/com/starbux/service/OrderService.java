@@ -1,9 +1,9 @@
 package com.starbux.service;
 
-import com.starbux.dto.OrderDto;
+import com.starbux.model.Order;
 
 public interface OrderService {
-    public OrderDto createOrder(Long userId, Long cartId);
+    public Order createOrder(Long userId, Long cartId);
 
-    public OrderDto getOrder(Long userId, Long cartId);
+    public Order getOrder(Long userId, Long cartId);
 }
