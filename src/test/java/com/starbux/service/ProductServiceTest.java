@@ -33,7 +33,7 @@ public class ProductServiceTest {
 
     @InjectMocks
     private ProductServiceImpl productService;
-            
+
     @Test
     public void getAllProducts() {
         List<Product> productList = new ArrayList<Product>();
