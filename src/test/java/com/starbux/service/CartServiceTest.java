@@ -3,9 +3,7 @@ package com.starbux.service;
 import com.starbux.dto.CartDto;
 import com.starbux.dto.CartItemDto;
 import com.starbux.mapper.CartMapper;
-import com.starbux.model.Cart;
-import com.starbux.model.CartItem;
-import com.starbux.model.User;
+import com.starbux.model.*;
 import com.starbux.repository.CartItemRepository;
 import com.starbux.repository.CartRepository;
 import com.starbux.repository.ProductRepository;
@@ -19,9 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -62,6 +58,7 @@ public class CartServiceTest {
         cart.setCartItems(Arrays.asList(cartItem));
         when(cartRepository.getById(any())).thenReturn(cart);
         when(cartRepository.save(any())).thenReturn(cart);
+        
         Cart result = cartService.getCart(1L, 1L);
         assertEquals(cart.getSubtotal(), result.getSubtotal());
         assertEquals(cart.getCartItems().size(), result.getCartItems().size());
@@ -69,22 +66,95 @@ public class CartServiceTest {
 
     @Test
     public void createCart() {
+        User user = setupTest();
+        Cart cart = new Cart(BigDecimal.ZERO);
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(cartRepository.saveAndFlush(any())).thenReturn(cart);
+        
+        Cart result = cartService.createCart(1L);
+        assertEquals(cart.getSubtotal(), result.getSubtotal());
     }
 
     @Test
     public void createCartItem() {
+        User user = setupTest();
+        Cart cart = new Cart(BigDecimal.ZERO);
+        CartItem cartItem = new CartItem(1,BigDecimal.ZERO);
+        cartItem.setCart(cart);
+        cart.setCartItems(Arrays.asList(cartItem));
+        user.setCarts(Arrays.asList(cart));
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(cartRepository.findById(any())).thenReturn(Optional.of(cart));
+        when(cartRepository.getById(any())).thenReturn(cart);
+        when(cartItemRepository.saveAndFlush(any())).thenReturn(cartItem);
+        
+        CartItem result = cartService.createCartItem(1L, 1L);
+        assertEquals(cartItem.getQuantity(), result.getQuantity());
+        assertEquals(cartItem.getPrice(), result.getPrice());
+        assertEquals(cartItem.getCart(), result.getCart());
     }
 
     @Test
     public void deleteCartItem() {
+        User user = setupTest();
+        Cart cart = new Cart(BigDecimal.ZERO);
+        CartItem cartItem = new CartItem(1,BigDecimal.ZERO);
+        cartItem.setCart(cart);
+        cart.setCartItems(Arrays.asList(cartItem));
+        user.setCarts(Arrays.asList(cart));
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(cartRepository.findById(any())).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findById(any())).thenReturn(Optional.of(cartItem));
+        
+        boolean result = cartService.deleteCartItem(1L, 1L, 1L);
+        assertEquals(true, result);
+        verify(cartItemRepository, times(1)).deleteById(any());
     }
 
     @Test
     public void addProductToCartItem() {
+        User user = setupTest();
+        Cart cart = new Cart(BigDecimal.ZERO);
+        CartItem cartItem = new CartItem(1,BigDecimal.ZERO);
+        Product product = new Product("Coffe", BigDecimal.ONE, ProductType.DRINK, Currency.getInstance("EUR"));
+        cartItem.setProducts(Arrays.asList(product));
+        cartItem.setCart(cart);
+        cart.setCartItems(Arrays.asList(cartItem));
+        user.setCarts(Arrays.asList(cart));
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(cartRepository.findById(any())).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findById(any())).thenReturn(Optional.of(cartItem));
+        when(cartRepository.getById(any())).thenReturn(cart);
+        when(productRepository.getById(any())).thenReturn(product);
+        when(productRepository.findById(any())).thenReturn(Optional.of(product));
+        when(cartItemRepository.getById(any())).thenReturn(cartItem);
+        when(cartItemRepository.saveAndFlush(any())).thenReturn(cartItem);
+        when(cartRepository.saveAndFlush(any())).thenReturn(cart);
+        
+        CartItem result = cartService.addProductToCartItem(1L,1L,1L,1L);
+        assertEquals(cartItem.getProducts(), result.getProducts());
     }
 
     @Test
     public void updateCartItemQuantity() {
+        User user = setupTest();
+        Cart cart = new Cart(BigDecimal.ZERO);
+        CartItem cartItem = new CartItem(2,BigDecimal.ZERO);
+        Product product = new Product("Coffe", BigDecimal.ONE, ProductType.DRINK, Currency.getInstance("EUR"));
+        cartItem.setProducts(Arrays.asList(product));
+        cartItem.setCart(cart);
+        cart.setCartItems(Arrays.asList(cartItem));
+        user.setCarts(Arrays.asList(cart));
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(cartRepository.findById(any())).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findById(any())).thenReturn(Optional.of(cartItem));
+        when(cartItemRepository.getById(any())).thenReturn(cartItem);
+        when(cartItemRepository.saveAndFlush(any())).thenReturn(cartItem);
+        when(cartRepository.getById(any())).thenReturn(cart);
+        when(cartRepository.saveAndFlush(any())).thenReturn(cart);
+
+        CartItem result = cartService.updateCartItemQuantity(1L,1L,1L,2);
+        assertEquals(cartItem.getProducts(), result.getProducts());
     }
 
     @Test

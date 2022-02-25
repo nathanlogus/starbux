@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("cartService")
@@ -98,8 +101,10 @@ public class CartServiceImpl implements CartService {
             Cart cart = cartRepository.getById(cartId);
             Product product = productRepository.getById(productId);
             if (productRepository.findById(productId).isPresent()) {
-                CartItem cartItem = cartItemRepository.findById(cartItemId).get();
-                cartItem.getProducts().add(product);
+                CartItem cartItem = cartItemRepository.getById(cartItemId);
+                List<Product> productList = cartItem.getProducts().stream().collect(Collectors.toList());
+                productList.add(product);
+                cartItem.setProducts(productList);
                 cartItem.setCart(cart);
                 cartItem.setQuantity(1);
                 cartItem.setPrice(cartItem.getProducts().stream()
@@ -121,7 +126,7 @@ public class CartServiceImpl implements CartService {
         if (userRepository.findById(userId).isPresent() &&
                 cartRepository.findById(cartId).isPresent() &&
                 cartItemRepository.findById(cartItemId).isPresent()) {
-            CartItem cartItem = cartItemRepository.findById(cartItemId).get();
+            CartItem cartItem = cartItemRepository.getById(cartItemId);
             cartItem.setQuantity(quantity);
             cartItem.setPrice(cartItem.getProducts().stream()
                     .map(x -> x.getPrice())
