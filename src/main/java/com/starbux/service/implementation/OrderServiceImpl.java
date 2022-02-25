@@ -58,8 +58,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getOrder(Long userId, Long cartId) {
-        if(orderRepository.findByCartId(cartId) != null){
-            return orderRepository.findByCartId(cartId);    
+        if (orderRepository.findByCartId(cartId) != null) {
+            return orderRepository.findByCartId(cartId);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find order!");
     }

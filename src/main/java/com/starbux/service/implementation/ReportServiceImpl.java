@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
@@ -69,7 +68,7 @@ public class ReportServiceImpl implements ReportService {
             Product mostUsedTopping = toppingList.stream()
                     .reduce(BinaryOperator.maxBy((o1, o2) -> Collections.frequency(toppingList, o1) -
                             Collections.frequency(toppingList, o2))).orElse(null);
-            if(mostUsedTopping != null)
+            if (mostUsedTopping != null)
                 toppingsPerDrink.setMostUsedTopping(productMapper.productDtoFromProduct(mostUsedTopping));
             return toppingsPerDrink;
         }).collect(Collectors.toList());
