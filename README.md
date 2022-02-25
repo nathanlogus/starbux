@@ -4,10 +4,6 @@
 
 <hr />
 
-<!-- prettier-ignore-start -->
-[![MIT License][license-badge]][license]
-<!-- prettier-ignore-end -->
-
 ## About
 We need a backend for our online coffee place startup, Starbux Coffee, where users can order
 drinks/toppings and admins can create/update/delete drinks/toppings and have access to
