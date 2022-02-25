@@ -58,7 +58,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getOrder(Long userId, Long cartId) {
-        return orderRepository.findByCartId(cartId);
+        if(orderRepository.findByCartId(cartId) != null){
+            return orderRepository.findByCartId(cartId);    
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find order!");
     }
 
     public BigDecimal calculateDiscounts(Cart cart) {
@@ -80,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
             quarterPriceDiscount = originalPrice.subtract(originalPrice.multiply(BigDecimal.valueOf(0.25)));
             quarterPriceEnable = true;
         }
-        if (totalDrinks > 3) {
+        if (totalDrinks >= 3) {
             CartItem lowestCartItem = cart.getCartItems().stream()
                     .min(Comparator.comparing(cartItem -> cartItem.getPrice()))
                     .orElseThrow(NoSuchElementException::new);
